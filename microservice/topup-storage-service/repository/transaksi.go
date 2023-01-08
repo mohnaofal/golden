@@ -8,7 +8,7 @@ import (
 	"github.com/mohnaofal/golden/microservice/topup-storage-service/models"
 )
 
-type hargaRepository struct {
+type transaksiRepository struct {
 	cfg *config.Config
 	DB  databases.ConnPostgres
 }
@@ -18,13 +18,13 @@ type TransaksiRepository interface {
 }
 
 func NewTransaksiRepository(cfg *config.Config) TransaksiRepository {
-	return &hargaRepository{
+	return &transaksiRepository{
 		cfg: cfg,
 		DB:  cfg.SQLDB(),
 	}
 }
 
-func (c *hargaRepository) InsertTrx(ctx context.Context, data *models.Transaksi) error {
+func (c *transaksiRepository) InsertTrx(ctx context.Context, data *models.Transaksi) error {
 	tx, err := c.DB.SqlDB().Begin()
 	if err != nil {
 		return err
