@@ -18,8 +18,8 @@ const (
 type Response struct {
 	Error   bool        `json:"error"`
 	ReffID  string      `json:"reff_id"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+	Message string      `json:"message,omitempty"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 // Write write raw data to response writer
