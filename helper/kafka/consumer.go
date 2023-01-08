@@ -12,8 +12,6 @@ type KafkaConsumer struct {
 	Consumer sarama.Consumer
 }
 
-type MessagehandlerType func(ctx context.Context, msg *sarama.ConsumerMessage)
-
 func NewConsumer(host string) (KafkaConsumer, error) {
 	config := sarama.NewConfig()
 	config.Consumer.Return.Errors = true
@@ -28,7 +26,7 @@ func NewConsumer(host string) (KafkaConsumer, error) {
 }
 
 // Consume function to consume message from apache kafka
-func (c *KafkaConsumer) Consume(topics []string, handler MessagehandlerType, signals chan os.Signal) {
+func (c *KafkaConsumer) Consume(topics []string, handler func(ctx context.Context, msg *sarama.ConsumerMessage), signals chan os.Signal) {
 	chanMessage := make(chan *sarama.ConsumerMessage, 256)
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
