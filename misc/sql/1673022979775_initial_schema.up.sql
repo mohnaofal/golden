@@ -27,7 +27,7 @@ CREATE TABLE topup (
 	topup_harga int NOT NULL DEFAULT 0,
 	topup_norek varchar(20) NOT NULL DEFAULT '',
 	topup_date int NOT NULL DEFAULT 0,
-	topup_pkey PRIMARY KEY (topup_id)
+	PRIMARY KEY (topup_id)
 );
 CREATE INDEX topup_norek_idx ON topup (topup_norek);
 CREATE INDEX topup_topup_date_idx ON topup (topup_date);
