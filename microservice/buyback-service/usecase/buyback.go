@@ -53,6 +53,10 @@ func (c *buybackUsecase) Buyback(ctx context.Context, form *models.BuybackReques
 		return errors.New("rekening not found")
 	}
 
+	if (rekening.Data.Saldo - form.Gram) < 0 {
+		return errors.New("saldo tidak mencukupi")
+	}
+
 	// assign harga topup
 	form.HargaTopup = harga.Data.HargaTopup
 
