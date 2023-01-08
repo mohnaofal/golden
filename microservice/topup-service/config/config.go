@@ -14,7 +14,7 @@ type Config struct {
 	sqlDB         databases.ConnPostgres
 	kafkaProducer kafka.KafkaProducer
 
-	hargaSvrHost string
+	hargaSvrHost, saldoSvrHost string
 }
 
 func LoadConfig() *Config {
@@ -23,7 +23,7 @@ func LoadConfig() *Config {
 	cfg.SetPORT()
 	cfg.InitSQLDB()
 	cfg.InitKafkaProcedur()
-	cfg.SetHargaSvrHost()
+	cfg.SvrHost()
 
 	return cfg
 }
@@ -64,10 +64,17 @@ func (c *Config) KafkaProcedur() kafka.KafkaProducer {
 	return c.kafkaProducer
 }
 
-func (c *Config) SetHargaSvrHost() {
+func (c *Config) SvrHost() {
+	// harga
 	c.hargaSvrHost = os.Getenv("HARGA_SVR_HOST")
+	// saldo
+	c.saldoSvrHost = os.Getenv("SALDO_SVR_HOST")
 }
 
 func (c *Config) HargaSvrHost() string {
 	return c.hargaSvrHost
+}
+
+func (c *Config) SaldoSvrHost() string {
+	return c.saldoSvrHost
 }

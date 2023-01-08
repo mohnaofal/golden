@@ -52,14 +52,14 @@ func (h *eventHandler) GlobalHandler(ctx context.Context, msg *sarama.ConsumerMe
 		form := new(models.HargaRequest)
 		err := json.Unmarshal(msg.Value, &form)
 		if err != nil {
-			fmt.Printf("GlobalHandler - topic : %s, err : %s", models.TopicInputHarga, err.Error())
+			fmt.Printf("GlobalHandler - topic : %s, err : %s \n", models.TopicInputHarga, err.Error())
 			return
 		}
 
 		if err := h.hargaUsecase.InputHargaStorage(ctx, form); err != nil {
-			fmt.Printf("GlobalHandler-InputHargaStorage - topic : %s, err : %s", models.TopicInputHarga, err.Error())
+			fmt.Printf("GlobalHandler-InputHargaStorage - topic : %s, err : %s \n", models.TopicInputHarga, err.Error())
 		} else {
-			fmt.Printf("GlobalHandler-InputHargaStorage - topic : %s - Success", models.TopicInputHarga)
+			fmt.Printf("GlobalHandler-InputHargaStorage - topic : %s - Success \n", models.TopicInputHarga)
 		}
 	}
 }

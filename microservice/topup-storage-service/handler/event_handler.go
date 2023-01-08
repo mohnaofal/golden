@@ -52,14 +52,14 @@ func (h *eventHandler) GlobalHandler(ctx context.Context, msg *sarama.ConsumerMe
 		form := new(models.TopupRequest)
 		err := json.Unmarshal(msg.Value, &form)
 		if err != nil {
-			fmt.Printf("GlobalHandler - topic : %s, err : %s", models.TopicTopup, err.Error())
+			fmt.Printf("GlobalHandler - topic : %s, err : %s \n", models.TopicTopup, err.Error())
 			return
 		}
 
 		if err := h.transaksiUsecase.TopupStorage(ctx, form); err != nil {
-			fmt.Printf("GlobalHandler-TopupStorage - topic : %s, err : %s", models.TopicTopup, err.Error())
+			fmt.Printf("GlobalHandler-TopupStorage - topic : %s, err : %s \n", models.TopicTopup, err.Error())
 		} else {
-			fmt.Printf("GlobalHandler-TopupStorage - topic : %s - Success", models.TopicTopup)
+			fmt.Printf("GlobalHandler-TopupStorage - topic : %s - Success \n", models.TopicTopup)
 		}
 	}
 }

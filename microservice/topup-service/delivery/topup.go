@@ -19,7 +19,8 @@ type TopupDelivery struct {
 
 func NewTopupDelivery(cfg *config.Config) TopupDelivery {
 	hargaRepository := repository.NewHargaRepository(cfg)
-	topupUsecase := usecase.NewTopupUsecase(hargaRepository, cfg.KafkaProcedur())
+	rekeningRepository := repository.NewRekeningRepository(cfg)
+	topupUsecase := usecase.NewTopupUsecase(hargaRepository, rekeningRepository, cfg.KafkaProcedur())
 	return TopupDelivery{topupUsecase: topupUsecase}
 }
 
