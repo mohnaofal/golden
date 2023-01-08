@@ -23,9 +23,11 @@ func main() {
 	// init router
 	r := mux.NewRouter()
 
-	// init event handler
-	eventHandler := handler.NewEventHandler(cfg)
-	eventHandler.RegisterConsumer()
+	go func() {
+		// init event handler
+		eventHandler := handler.NewEventHandler(cfg)
+		eventHandler.RegisterConsumer()
+	}()
 
 	fmt.Println("Listening on port :", cfg.GetPORT())
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", cfg.GetPORT()), r); err != nil {
