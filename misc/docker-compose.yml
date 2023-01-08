@@ -1,0 +1,69 @@
+# FOR LOCAL DEVELOPMENT
+version: "3"
+services:
+    dbmigration:
+        restart: on-failure
+        image: migrate/migrate
+        depends_on:
+            - dbserver
+        links:
+            - dbserver
+        volumes:
+            - ./:/go/src/github.com/mohnaofal/golden
+        working_dir: /go/src/github.com/mohnaofal/golden
+        command: -path=./sql -database postgres://adminpostgres:87654321@dbserver:5432/golden?sslmode=disable up
+    dbbrowser:
+        restart: on-failure
+        image: adminer:4-standalone
+        ports:
+            - "18081:8080"
+        depends_on:
+            - dbserver
+        links:
+            - dbserver
+        logging:
+            driver: none
+        environment:
+            - ADMINER_DEFAULT_SERVER=dbserver
+            - ADMINER_DESIGN=flat
+    dbserver:
+        restart: always
+        image: postgres:13.1
+        expose:
+            - 5432
+        logging:
+            driver: none
+        environment:
+            - POSTGRES_DB=golden
+            - POSTGRES_USER=adminpostgres
+            - POSTGRES_PASSWORD=87654321
+    zookeeper:
+        image: wurstmeister/zookeeper
+        ports:
+            - "2181:2181"
+        restart: unless-stopped
+    kafka:
+        image: wurstmeister/kafka
+        # hostname: kafka
+        ports:
+            - "9092:9092"
+        depends_on:
+            - zookeeper
+        environment:
+            KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_ZOOKEEPER_TIMEOUT_MS: 36000
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        restart: unless-stopped
+    kafka-ui:
+        image: provectuslabs/kafka-ui
+        ports:
+            - "28080:8080"
+        restart: always
+        environment:
+            - KAFKA_CLUSTERS_0_NAME=local
+            - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+
+networks:
+    default:
