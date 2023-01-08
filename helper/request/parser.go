@@ -1,30 +1,50 @@
 package request
 
-import "net/http"
+import (
+	"encoding/json"
+	"net/http"
+	"strings"
 
-const (
-	defaultTagName = "json"
+	"github.com/go-playground/form"
 )
 
-type parser struct {
-	tagName string
-}
+const (
+	tagName = "json"
+	maxSize = 4 << 20
+)
 
-type Parser interface {
-	Form(r *http.Request, i interface{}) error
-	Query(r *http.Request, i interface{}) error
-}
-
-func NewDefaultParser() Parser {
-	return &parser{
-		tagName: defaultTagName,
+func Form(r *http.Request, i interface{}) error {
+	if r.Body == nil {
+		return nil
 	}
+	// nolint
+	defer r.Body.Close()
+
+	ct := r.Header.Get("Content-Type")
+	if strings.HasPrefix(ct, "application/json") || strings.HasPrefix(ct, "text/json") {
+		if err := json.NewDecoder(r.Body).Decode(i); err != nil {
+			return err
+		}
+	} else if strings.HasPrefix(ct, "multipart/form-data") {
+		if err := r.ParseMultipartForm(maxSize); err != nil {
+			return err
+		}
+	} else {
+		// default parse is urlencoded form type
+		if err := r.ParseForm(); err != nil {
+			return err
+		}
+	}
+
+	d := form.NewDecoder()
+	d.SetTagName(tagName)
+
+	return d.Decode(i, r.Form)
 }
 
-func (c *parser) Form(r *http.Request, i interface{}) error {
-	return nil
-}
+func Query(r *http.Request, i interface{}) error {
+	d := form.NewDecoder()
+	d.SetTagName(tagName)
 
-func (c *parser) Query(r *http.Request, i interface{}) error {
-	return nil
+	return d.Decode(i, r.URL.Query())
 }
