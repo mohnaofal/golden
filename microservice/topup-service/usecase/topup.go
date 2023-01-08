@@ -41,6 +41,8 @@ func (c *topupUsecase) Topup(ctx context.Context, form *models.TopupRequest) err
 		return errors.New("harga topup tidak sama")
 	}
 
+	form.HargaBuyback = harga.Data.HargaBuyback
+
 	msgBytes, err := json.Marshal(form)
 	if err != nil {
 		return err

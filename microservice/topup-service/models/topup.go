@@ -11,9 +11,10 @@ const (
 )
 
 type TopupRequest struct {
-	Gram  float64 `json:"gram"`
-	Harga int     `json:"harga"`
-	Norek string  `json:"norek"`
+	Gram         float64 `json:"gram"`
+	Harga        int     `json:"harga"`
+	Norek        string  `json:"norek"`
+	HargaBuyback int     `json:"harga_buyback,omitempty"`
 }
 
 func (c *TopupRequest) Validate() error {
