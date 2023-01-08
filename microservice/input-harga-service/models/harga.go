@@ -1,5 +1,10 @@
 package models
 
+const (
+	// topic input harga
+	TopicInputHarga = `input-harga`
+)
+
 type Harga struct {
 	HargaID      int    `json:"harga_id" db:"harga_id"`
 	HargaAdminID string `json:"harga_admin_id" db:"harga_admin_id"`
